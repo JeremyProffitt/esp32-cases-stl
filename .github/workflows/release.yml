@@ -1,0 +1,51 @@
+name: Build & Release
+
+# Builds STL + PNG artifacts for every .scad and publishes them to a rolling
+# "latest" GitHub Release. Triggered by pushing to main (per the project's
+# push-to-deploy convention) and manually.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
+      - name: Build all designs (STL + PNG)
+        run: |
+          chmod +x build.sh
+          # OpenSCAD PNG export needs a display; run under Xvfb.
+          xvfb-run -a ./build.sh
+
+      - name: List artifacts
+        run: ls -la build/
+
+      - name: Publish rolling "latest" release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          body: |
+            Rolling build of all OpenSCAD designs.
+            Commit: ${{ github.sha }}
+          files: |
+            build/*.stl
+            build/*.png
+          fail_on_unmatched_files: true
