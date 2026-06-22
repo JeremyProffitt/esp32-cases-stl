@@ -26,8 +26,8 @@ IMGSIZE="800,600"
 CAM_FRONT="0,0,0,55,0,45,0"
 CAM_REAR="0,0,0,55,0,225,0"
 
-# Find every .scad (skip the build dir itself).
-find "$ROOT" -name '*.scad' -not -path "$OUT/*" | while read -r scad; do
+# Find every design .scad (skip the build dir and the tools/ helper wrappers).
+find "$ROOT" -name '*.scad' -not -path "$OUT/*" -not -path "$ROOT/tools/*" | while read -r scad; do
     name="$(basename "$scad" .scad)"
     echo ">> $name"
     "$OPENSCAD" -o "$OUT/$name.stl" --export-format=binstl "$scad"
@@ -38,5 +38,17 @@ find "$ROOT" -name '*.scad' -not -path "$OUT/*" | while read -r scad; do
         --camera="$CAM_REAR" --viewall --autocenter \
         --imgsize="$IMGSIZE" --colorscheme=Tomorrow "$scad"
 done
+
+# Engineering drawing sheets (multi-view, dimensioned). Needs Python + Pillow.
+PY="${PYTHON:-}"
+if [ -z "$PY" ]; then
+    command -v python3 >/dev/null 2>&1 && PY=python3 || PY=python
+fi
+if "$PY" -c "import PIL" >/dev/null 2>&1; then
+    echo ">> drawing sheets"
+    OPENSCAD="$OPENSCAD" "$PY" "$ROOT/tools/make_drawings.py"
+else
+    echo ">> skipping drawing sheets (Python Pillow not installed)"
+fi
 
 echo "Done. Artifacts in $OUT/"

@@ -38,6 +38,15 @@ Each part is provided in **two forms**:
 
 Folder: [`TTGO-TM-ESP32-aka-TMusic/`](TTGO-TM-ESP32-aka-TMusic/)
 
+#### Drawing diagrams
+
+Dimensioned multi-view (front / top / right / isometric) engineering sheets,
+generated from the parametric models by [`tools/make_drawings.py`](tools/make_drawings.py):
+
+| Base Tray | Front Bezel |
+|-----------|-------------|
+| ![Tray drawing](https://github.com/JeremyProffitt/esp32-cases-stl/releases/latest/download/ttgo_cap_drawing.png) | ![Bezel drawing](https://github.com/JeremyProffitt/esp32-cases-stl/releases/latest/download/ttgo_body_drawing.png) |
+
 #### Base Tray — parametric (`ttgo_cap.scad`)
 
 | Front View | Rear View |

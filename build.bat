@@ -23,7 +23,7 @@ set "CAM_FRONT=0,0,0,55,0,45,0"
 set "CAM_REAR=0,0,0,55,0,225,0"
 
 for /r "%ROOT%" %%S in (*.scad) do (
-    echo %%S | findstr /i /c:"\\build\\" >nul
+    echo %%S | findstr /i /c:"\\build\\" /c:"\\tools\\" >nul
     if errorlevel 1 (
         set "NAME=%%~nS"
         echo ^>^> !NAME!
@@ -31,6 +31,16 @@ for /r "%ROOT%" %%S in (*.scad) do (
         "%OPENSCAD%" -o "%OUT%\!NAME!_front.png" --camera=%CAM_FRONT% --viewall --autocenter --imgsize=%IMGSIZE% --colorscheme=Tomorrow "%%S"
         "%OPENSCAD%" -o "%OUT%\!NAME!_rear.png" --camera=%CAM_REAR% --viewall --autocenter --imgsize=%IMGSIZE% --colorscheme=Tomorrow "%%S"
     )
+)
+
+REM Engineering drawing sheets (multi-view, dimensioned). Needs Python + Pillow.
+python -c "import PIL" >nul 2>&1
+if errorlevel 1 (
+    echo ^>^> skipping drawing sheets ^(Python Pillow not installed^)
+) else (
+    echo ^>^> drawing sheets
+    set "OPENSCAD=%OPENSCAD%"
+    python "%ROOT%tools\make_drawings.py"
 )
 
 echo Done. Artifacts in %OUT%\

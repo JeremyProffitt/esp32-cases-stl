@@ -28,7 +28,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openscad xvfb
 
-      - name: Build all designs (STL + PNG)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Pillow (drawing sheets)
+        run: python -m pip install --upgrade pillow
+
+      - name: Build all designs (STL + PNG + drawing sheets)
         run: |
           chmod +x build.sh
           # OpenSCAD PNG export needs a display; run under Xvfb.
