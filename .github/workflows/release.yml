@@ -20,40 +20,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Install OpenSCAD
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openscad xvfb
+    - name: Install OpenSCAD
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openscad xvfb
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
 
-      - name: Install Pillow (drawing sheets)
-        run: python -m pip install --upgrade pillow
+        cache: pip
+    - name: Install Pillow (drawing sheets)
+      run: python -m pip install --upgrade pillow
 
-      - name: Build all designs (STL + PNG + drawing sheets)
-        run: |
-          chmod +x build.sh
-          # OpenSCAD PNG export needs a display; run under Xvfb.
-          xvfb-run -a ./build.sh
+    - name: Build all designs (STL + PNG + drawing sheets)
+      run: |
+        chmod +x build.sh
+        # OpenSCAD PNG export needs a display; run under Xvfb.
+        xvfb-run -a ./build.sh
 
-      - name: List artifacts
-        run: ls -la build/
+    - name: List artifacts
+      run: ls -la build/
 
-      - name: Publish rolling "latest" release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: Latest build
-          body: |
-            Rolling build of all OpenSCAD designs.
-            Commit: ${{ github.sha }}
-          files: |
-            build/*.stl
-            build/*.png
-          fail_on_unmatched_files: true
+    - name: Publish rolling "latest" release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: latest
+        name: Latest build
+        body: |
+          Rolling build of all OpenSCAD designs.
+          Commit: ${{ github.sha }}
+        files: |
+          build/*.stl
+          build/*.png
+        fail_on_unmatched_files: true
