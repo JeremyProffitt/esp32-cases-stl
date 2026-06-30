@@ -80,6 +80,7 @@ Origin: front-left-bottom corner of the normalized bezel bounding box.
 | skirt_relief_width_mm | 8.000 | Front/back skirt notch width |
 | skirt_relief_depth_mm | 1.400 | Front/back skirt notch depth |
 | skirt_relief_height_mm | 2.500 | Lower skirt notch height |
+| skirt_relief_z_mm | 3.000 | Relief bottom height above bezel bottom |
 
 ## Color Key
 
@@ -169,7 +170,8 @@ preview aids only; exported STL files do not retain them.
 ### top_bezel_skirt_alignment_relief_cutouts
 
 - Purpose: Small internal notches in the lower skirt and left slot wall region.
-- Position: inside faces of the lower skirt walls and left-side slot wall.
+- Position: inside faces of the lower skirt walls, starting 3 mm above the
+  bezel bottom.
 
 ## Debug And Validation Modules
 

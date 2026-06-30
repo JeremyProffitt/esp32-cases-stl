@@ -114,7 +114,7 @@ The top bezel was rebuilt around these named features:
 - `top_bezel_corner_relief_hole_cutouts()`: four small 1.9 mm holes near the
   top-face corners.
 - `top_bezel_skirt_alignment_relief_cutouts()`: small inside-wall lower skirt
-  reliefs.
+  reliefs, now starting 3 mm above the bezel bottom.
 
 Important correction: the previous approximation used five narrow slots. The
 source mesh sections show four larger rounded slots, so the rebuild uses four.
@@ -129,6 +129,8 @@ The base tray was rebuilt around these named features:
 - `base_tray_rim_rabbet_cutout()`: top perimeter rabbet, approximately 5.4 mm
   high, used by the bezel skirt.
 - `base_tray_support_lugs_positive()`: four discrete lugs near the upper rim.
+- `base_tray_snap_tabs_positive()`: positive tabs on the tray lip that align
+  with the bezel's inside-wall snap relief pockets.
 - `base_tray_left_wall_connector_relief_cutouts()`: two left-wall reliefs at
   the upper rim.
 

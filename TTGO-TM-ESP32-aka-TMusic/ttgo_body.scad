@@ -88,7 +88,7 @@ corner_relief_hole_back_y_mm = 44.350;
 skirt_relief_width_mm = 8.000;
 skirt_relief_depth_mm = 1.400;
 skirt_relief_height_mm = 2.500;
-skirt_relief_z_mm = 0.000;
+skirt_relief_z_mm = 3.000;
 front_skirt_relief_centers_x_mm = [18.800, 38.700, 59.700];
 back_skirt_relief_centers_x_mm = [18.800, 38.700, 59.700];
 left_skirt_relief_width_mm = 1.800;
@@ -285,7 +285,8 @@ module top_bezel_corner_relief_hole_cutouts() {
  *   Front/back reliefs are skirt_relief_width_mm by skirt_relief_depth_mm.
  *
  * ALIGNMENT:
- *   These approximate the small repeated edge breaks visible in low-Z slices.
+ *   These approximate the small repeated inside-wall snap reliefs visible in
+ *   lower skirt sections.
  *
  * CONNECTS TO:
  *   - clearance around mating tray details.
@@ -310,10 +311,10 @@ module top_bezel_skirt_alignment_relief_cutouts() {
     for (center_y_mm = left_skirt_relief_centers_y_mm)
         translate([top_bezel_inner_cavity_x_mm - left_skirt_relief_width_mm,
                    center_y_mm - left_skirt_relief_depth_mm / 2,
-                   top_bezel_height_mm - top_bezel_face_thickness_mm - case_epsilon_mm])
+                   skirt_relief_z_mm - case_epsilon_mm])
             cube([left_skirt_relief_width_mm + case_epsilon_mm,
                   left_skirt_relief_depth_mm,
-                  top_bezel_face_thickness_mm + (2 * case_cut_overshoot_mm)]);
+                  skirt_relief_height_mm + case_epsilon_mm]);
 }
 
 // ===========================================

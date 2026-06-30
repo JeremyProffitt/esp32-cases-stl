@@ -24,6 +24,7 @@
  * | base_tray_inner_cavity        | dodgerblue    | [5.25,4.25,1.75]| [66.7,41.0,thru]   | negative cutout  |
  * | base_tray_rim_rabbet          | limegreen     | top perimeter  | 5.4 high            | bezel skirt      |
  * | support_lugs (x4)             | magenta       | inner rim      | variable            | PCB / latch area |
+ * | snap_tabs                     | cyan          | rim lip        | variable            | bezel reliefs    |
  * | left_wall_connector_reliefs   | red           | left wall      | variable            | negative cutout  |
  */
 
@@ -89,11 +90,27 @@ left_wall_relief_z_mm = base_tray_height_mm - left_wall_relief_height_mm;
 left_wall_relief_depth_mm = 7.200;
 left_wall_relief_centers_y_mm = [18.200, 36.800];
 
+// --- snap_tabs dimensions (positive tabs matching bezel inside-wall reliefs) ---
+snap_tab_clearance_xy_mm = 0.150;
+snap_tab_clearance_z_mm = 0.150;
+snap_tab_relief_z_from_bezel_bottom_mm = 3.000;
+snap_tab_z_mm = base_tray_height_mm - base_tray_rim_height_mm + snap_tab_relief_z_from_bezel_bottom_mm;
+snap_tab_height_mm = min(2.500 - snap_tab_clearance_z_mm,
+                         base_tray_height_mm - snap_tab_z_mm - case_epsilon_mm);
+snap_tab_width_mm = 8.000 - 2 * snap_tab_clearance_xy_mm;
+snap_tab_depth_mm = 1.400 - snap_tab_clearance_xy_mm;
+snap_tab_front_centers_x_mm = [18.800, 38.700, 59.700];
+snap_tab_back_centers_x_mm = [18.800, 38.700, 59.700];
+snap_tab_left_width_mm = 1.800 - snap_tab_clearance_xy_mm;
+snap_tab_left_depth_mm = 3.800 - 2 * snap_tab_clearance_xy_mm;
+snap_tab_left_centers_y_mm = [15.000, 22.600, 30.200, 37.800];
+
 // --- Preview colors (used only by debug/color-key render modes) ---
 color_base_tray_outer_block = "gold";
 color_inner_cavity_cutout = "dodgerblue";
 color_rim_rabbet_cutout = "limegreen";
 color_support_lugs = "magenta";
+color_snap_tabs = "cyan";
 color_left_wall_connector_reliefs = "red";
 color_source_mesh_overlay = "orange";
 
@@ -183,6 +200,51 @@ module base_tray_support_lugs_positive() {
                         support_lug_height_mm,
                         support_lug_corner_radius_mm);
     }
+}
+
+/**
+ * Base Tray Snap Tabs
+ *
+ * POSITION:
+ *   Positive tabs on the upper rim lip, aligned with the bezel's inside-wall
+ *   skirt relief pockets.
+ *
+ * BOUNDING BOX:
+ *   z range starts at snap_tab_z_mm, which places the tabs 3 mm above the
+ *   seated bezel bottom.
+ *
+ * ALIGNMENT:
+ *   Front/back tabs protrude outward from the tray rim lip. Left-side tabs
+ *   protrude outward from the left rim lip. A small clearance is applied so the
+ *   tabs fit into the bezel pockets instead of being the exact same size.
+ *
+ * CONNECTS TO:
+ *   - top_bezel_skirt_alignment_relief_cutouts in ttgo_body.scad.
+ */
+module base_tray_snap_tabs_positive() {
+    for (center_x_mm = snap_tab_front_centers_x_mm)
+        translate([center_x_mm - snap_tab_width_mm / 2,
+                   base_tray_rim_inset_y_mm - snap_tab_depth_mm,
+                   snap_tab_z_mm])
+            cube([snap_tab_width_mm,
+                  snap_tab_depth_mm + case_epsilon_mm,
+                  snap_tab_height_mm]);
+
+    for (center_x_mm = snap_tab_back_centers_x_mm)
+        translate([center_x_mm - snap_tab_width_mm / 2,
+                   base_tray_rim_inset_y_mm + base_tray_rim_depth_mm - case_epsilon_mm,
+                   snap_tab_z_mm])
+            cube([snap_tab_width_mm,
+                  snap_tab_depth_mm + case_epsilon_mm,
+                  snap_tab_height_mm]);
+
+    for (center_y_mm = snap_tab_left_centers_y_mm)
+        translate([base_tray_rim_inset_x_mm - snap_tab_left_width_mm,
+                   center_y_mm - snap_tab_left_depth_mm / 2,
+                   snap_tab_z_mm])
+            cube([snap_tab_left_width_mm + case_epsilon_mm,
+                  snap_tab_left_depth_mm,
+                  snap_tab_height_mm]);
 }
 
 // ===========================================
@@ -309,6 +371,7 @@ module ttgo_base_tray() {
         union() {
             base_tray_cut_shell();
             base_tray_support_lugs_positive();
+            base_tray_snap_tabs_positive();
         }
         base_tray_final_negative_cutouts();
     }
@@ -357,6 +420,7 @@ module debug_bounds() {
 module debug_positive_only() {
     color(color_base_tray_outer_block) base_tray_outer_block();
     color(color_support_lugs) base_tray_support_lugs_positive();
+    color(color_snap_tabs) base_tray_snap_tabs_positive();
 }
 
 module debug_negative_only() {
@@ -369,22 +433,25 @@ module debug_cutouts() {
     color(color_base_tray_outer_block, 0.25) base_tray_outer_block();
     debug_negative_only();
     color(color_support_lugs, 0.90) base_tray_support_lugs_positive();
+    color(color_snap_tabs, 0.90) base_tray_snap_tabs_positive();
 }
 
 /**
  * Color Key Preview
  *
- * Shows the positive shell, support lugs, and each named cutout volume in a
- * distinct color. The magenta support lugs are lifted upward as a visual
- * callout because they sit inside the rim in the real model. This is for
- * identification only; STL export ignores colors and this mode is not the
- * printable model.
+ * Shows the positive shell, support lugs, snap tabs, and each named cutout
+ * volume in a distinct color. The magenta support lugs and cyan snap tabs are
+ * lifted upward as visual callouts because they sit on/inside the rim in the
+ * real model. This is for identification only; STL export ignores colors and
+ * this mode is not the printable model.
  */
 module color_key_preview() {
     color(color_base_tray_outer_block, 0.25) base_tray_outer_block();
     debug_negative_only();
     translate([0, 0, 4])
         color(color_support_lugs, 0.95) base_tray_support_lugs_positive();
+    translate([0, 0, 2])
+        color(color_snap_tabs, 0.95) base_tray_snap_tabs_positive();
 }
 
 module debug_section_x(x_mm = case_width_mm / 2) {

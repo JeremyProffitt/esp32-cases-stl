@@ -69,6 +69,14 @@ Origin: front-left-bottom corner of the normalized tray bounding box.
 | support_lug_depth_mm | 2.200 | Lug Y protrusion |
 | front_support_lug_specs_mm | [[13.8,14.2],[49.0,14.2]] | Front-side lug X origins and widths |
 | rear_support_lug_specs_mm | [[23.8,6.4],[56.0,8.5]] | Rear-side lug X origins and widths |
+| **base_tray_snap_tabs_positive** | | |
+| snap_tab_relief_z_from_bezel_bottom_mm | 3.000 | Matching height of the bezel relief pockets |
+| snap_tab_z_mm | 19.750 | Tab bottom Z on the tray rim |
+| snap_tab_height_mm | 2.350 | Tab height after fit/top-clearance limiting |
+| snap_tab_width_mm | 7.700 | Front/back tab X size with clearance |
+| snap_tab_depth_mm | 1.250 | Front/back tab protrusion with clearance |
+| snap_tab_left_width_mm | 1.650 | Left tab X protrusion with clearance |
+| snap_tab_left_depth_mm | 3.500 | Left tab Y size with clearance |
 | **base_tray_left_wall_connector_relief_cutouts** | | |
 | left_wall_relief_centers_y_mm | [18.2,36.8] | Y centers for left wall reliefs |
 | left_wall_relief_width_mm | 4.000 | X cut depth through left wall |
@@ -78,13 +86,13 @@ Origin: front-left-bottom corner of the normalized tray bounding box.
 ## Color Key
 
 `see_in_color` defaults to `1` in `ttgo_cap.scad`, so OpenSCAD Preview (`F5`)
-shows the shell, support lugs, and cutout volumes by color when the file is
-opened manually. Set `see_in_color = 0` for the printable boolean result; the
-project build scripts force that value for generated STL/PNG artifacts. The
-cutouts are voids in the printable model, so they cannot remain separately
-colored. The magenta support lugs are lifted upward only in this preview mode
-so they are not hidden inside the rim. Colors are preview aids only; exported
-STL files do not retain them.
+shows the shell, support lugs, snap tabs, and cutout volumes by color when the
+file is opened manually. Set `see_in_color = 0` for the printable boolean
+result; the project build scripts force that value for generated STL/PNG
+artifacts. The cutouts are voids in the printable model, so they cannot remain
+separately colored. The magenta support lugs and cyan snap tabs are lifted
+upward only in this preview mode so they are not hidden by the rim/cutout
+volumes. Colors are preview aids only; exported STL files do not retain them.
 
 | Color | Section Name | Meaning |
 |-------|--------------|---------|
@@ -92,6 +100,7 @@ STL files do not retain them.
 | Dodger blue | `base_tray_inner_cavity_cutout` | Main electronics cavity removed from the tray |
 | Lime green | `base_tray_rim_rabbet_cutout` | Rim rabbet removed to form the bezel seat |
 | Magenta | `base_tray_support_lugs_positive` | Positive support / latch / PCB-location lugs |
+| Cyan | `base_tray_snap_tabs_positive` | Positive snap tabs that fit the bezel inside-wall relief pockets |
 | Red | `base_tray_left_wall_connector_relief_cutouts` | Upper left-wall connector relief cutouts |
 | Orange | `validation_source_mesh` | Source STL overlay in validation mode |
 
@@ -156,6 +165,16 @@ STL files do not retain them.
 - Purpose: Four discrete support/latch/PCB-locating pads near the upper rim.
 - Z range: `[18.1,21.4]`.
 - These replace the earlier single continuous rail approximation.
+
+### base_tray_snap_tabs_positive
+
+- Purpose: Positive snap tabs on the tray lip that fit into the cyan
+  inside-wall relief pockets in `ttgo_body.scad`.
+- Position: front, back, and left rim lips.
+- Z range: approximately `[19.75,22.10]`, matching relief pockets that start
+  3 mm above the seated bezel bottom.
+- Fit: tabs are slightly smaller than the bezel pockets using
+  `snap_tab_clearance_xy_mm` and `snap_tab_clearance_z_mm`.
 
 ### base_tray_left_wall_connector_relief_cutouts
 
