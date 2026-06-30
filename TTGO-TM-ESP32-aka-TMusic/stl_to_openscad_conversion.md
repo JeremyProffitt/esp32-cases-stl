@@ -113,7 +113,8 @@ The top bezel was rebuilt around these named features:
 - `top_bezel_side_control_slot_cutouts()`: four rounded rectangular openings.
 - `top_bezel_corner_relief_hole_cutouts()`: four small 1.9 mm holes near the
   top-face corners.
-- `top_bezel_skirt_alignment_relief_cutouts()`: small lower skirt edge breaks.
+- `top_bezel_skirt_alignment_relief_cutouts()`: small inside-wall lower skirt
+  reliefs.
 
 Important correction: the previous approximation used five narrow slots. The
 source mesh sections show four larger rounded slots, so the rebuild uses four.

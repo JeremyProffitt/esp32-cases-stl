@@ -25,7 +25,7 @@
  * | display_window               | limegreen     | [15.2,5.6,12]  | [51.5,38.4,thru]   | negative cutout  |
  * | side_control_slots (x4)      | magenta       | left face area | [8.7,5.9,thru]     | negative cutout  |
  * | corner_relief_holes (x4)     | red           | top corners    | d=1.9              | negative cutout  |
- * | skirt_alignment_reliefs      | cyan          | skirt edges    | variable           | negative cutout  |
+ * | skirt_alignment_reliefs      | cyan          | inside skirt walls | variable        | negative cutout  |
  */
 
 // ===========================================
@@ -293,7 +293,7 @@ module top_bezel_corner_relief_hole_cutouts() {
 module top_bezel_skirt_alignment_relief_cutouts() {
     for (center_x_mm = front_skirt_relief_centers_x_mm)
         translate([center_x_mm - skirt_relief_width_mm / 2,
-                   -case_epsilon_mm,
+                   top_bezel_inner_cavity_y_mm - skirt_relief_depth_mm,
                    skirt_relief_z_mm - case_epsilon_mm])
             cube([skirt_relief_width_mm,
                   skirt_relief_depth_mm + case_epsilon_mm,
@@ -301,14 +301,14 @@ module top_bezel_skirt_alignment_relief_cutouts() {
 
     for (center_x_mm = back_skirt_relief_centers_x_mm)
         translate([center_x_mm - skirt_relief_width_mm / 2,
-                   case_depth_mm - skirt_relief_depth_mm,
+                   top_bezel_inner_cavity_y_mm + top_bezel_inner_cavity_depth_mm - case_epsilon_mm,
                    skirt_relief_z_mm - case_epsilon_mm])
             cube([skirt_relief_width_mm,
                   skirt_relief_depth_mm + case_epsilon_mm,
                   skirt_relief_height_mm + case_epsilon_mm]);
 
     for (center_y_mm = left_skirt_relief_centers_y_mm)
-        translate([-case_epsilon_mm,
+        translate([top_bezel_inner_cavity_x_mm - left_skirt_relief_width_mm,
                    center_y_mm - left_skirt_relief_depth_mm / 2,
                    top_bezel_height_mm - top_bezel_face_thickness_mm - case_epsilon_mm])
             cube([left_skirt_relief_width_mm + case_epsilon_mm,

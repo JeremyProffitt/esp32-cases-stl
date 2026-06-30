@@ -97,7 +97,7 @@ preview aids only; exported STL files do not retain them.
 | Lime green | `top_bezel_display_window_cutout` | Display window through-cut |
 | Magenta | `top_bezel_side_control_slot_cutouts` | Four side control / access slots |
 | Red | `top_bezel_corner_relief_hole_cutouts` | Four small corner relief holes |
-| Cyan | `top_bezel_skirt_alignment_relief_cutouts` | Lower skirt and side relief notches |
+| Cyan | `top_bezel_skirt_alignment_relief_cutouts` | Inside-wall lower skirt and side relief notches |
 | Orange | `validation_source_mesh` | Source STL overlay in validation mode |
 
 ## Component Diagram
@@ -168,8 +168,8 @@ preview aids only; exported STL files do not retain them.
 
 ### top_bezel_skirt_alignment_relief_cutouts
 
-- Purpose: Small notches in the lower skirt and left slot wall region.
-- Position: lower skirt edges and left-side slot edge.
+- Purpose: Small internal notches in the lower skirt and left slot wall region.
+- Position: inside faces of the lower skirt walls and left-side slot wall.
 
 ## Debug And Validation Modules
 
