@@ -18,14 +18,14 @@
  * COMPONENT INDEX
  * ===========================================
  *
- * | Component                    | Origin [X,Y,Z] | Size [W,D,H]       | Attaches To      |
- * |------------------------------|----------------|--------------------|------------------|
- * | top_bezel_positive_shell     | [0,0,0]        | [76.2,49.523,15]   | base tray rim    |
- * | top_bezel_inner_cavity       | [2.9,2.4,0]    | [70.4,44.7,12.05]  | negative cutout  |
- * | display_window               | [15.2,5.6,12]  | [51.5,38.4,thru]   | negative cutout  |
- * | side_control_slots (x4)      | left face area | [8.7,5.9,thru]     | negative cutout  |
- * | corner_relief_holes (x4)     | top corners    | d=1.9              | negative cutout  |
- * | skirt_alignment_reliefs      | skirt edges    | variable           | negative cutout  |
+ * | Component                    | Preview Color | Origin [X,Y,Z] | Size [W,D,H]       | Attaches To      |
+ * |------------------------------|---------------|----------------|--------------------|------------------|
+ * | top_bezel_positive_shell     | gold          | [0,0,0]        | [76.2,49.523,15]   | base tray rim    |
+ * | top_bezel_inner_cavity       | dodgerblue    | [2.9,2.4,0]    | [70.4,44.7,12.05]  | negative cutout  |
+ * | display_window               | limegreen     | [15.2,5.6,12]  | [51.5,38.4,thru]   | negative cutout  |
+ * | side_control_slots (x4)      | magenta       | left face area | [8.7,5.9,thru]     | negative cutout  |
+ * | corner_relief_holes (x4)     | red           | top corners    | d=1.9              | negative cutout  |
+ * | skirt_alignment_reliefs      | cyan          | skirt edges    | variable           | negative cutout  |
  */
 
 // ===========================================
@@ -94,6 +94,15 @@ back_skirt_relief_centers_x_mm = [18.800, 38.700, 59.700];
 left_skirt_relief_width_mm = 1.800;
 left_skirt_relief_depth_mm = 3.800;
 left_skirt_relief_centers_y_mm = [15.000, 22.600, 30.200, 37.800];
+
+// --- Preview colors (used only by debug/color-key render modes) ---
+color_top_bezel_shell = "gold";
+color_inner_cavity_cutout = "dodgerblue";
+color_display_window_cutout = "limegreen";
+color_side_control_slot_cutouts = "magenta";
+color_corner_relief_hole_cutouts = "red";
+color_skirt_alignment_relief_cutouts = "cyan";
+color_source_mesh_overlay = "orange";
 
 $fn = 64;
 
@@ -362,16 +371,30 @@ module debug_bounds() {
 }
 
 module debug_positive_only() {
-    color("lightgray") top_bezel_positive_shell();
+    color(color_top_bezel_shell) top_bezel_positive_shell();
 }
 
 module debug_negative_only() {
-    color("crimson", 0.35) top_bezel_negative_cutouts();
+    color(color_inner_cavity_cutout, 0.45) top_bezel_inner_cavity_cutout();
+    color(color_display_window_cutout, 0.65) top_bezel_display_window_cutout();
+    color(color_side_control_slot_cutouts, 0.70) top_bezel_side_control_slot_cutouts();
+    color(color_corner_relief_hole_cutouts, 0.80) top_bezel_corner_relief_hole_cutouts();
+    color(color_skirt_alignment_relief_cutouts, 0.70) top_bezel_skirt_alignment_relief_cutouts();
 }
 
 module debug_cutouts() {
-    color("lightgray", 0.25) top_bezel_positive_shell();
+    color(color_top_bezel_shell, 0.25) top_bezel_positive_shell();
     debug_negative_only();
+}
+
+/**
+ * Color Key Preview
+ *
+ * Shows the positive shell and each named negative cutout volume in a distinct
+ * color. This is for visual identification only; STL export ignores colors.
+ */
+module color_key_preview() {
+    debug_cutouts();
 }
 
 module debug_section_x(x_mm = case_width_mm / 2) {
@@ -401,11 +424,11 @@ module validation_source_mesh() {
 
 module validation_overlay() {
     color("steelblue", 0.55) ttgo_top_bezel();
-    color("orange", 0.25) validation_source_mesh();
+    color(color_source_mesh_overlay, 0.25) validation_source_mesh();
 }
 
 module assembly_colored() {
-    color("steelblue") ttgo_top_bezel();
+    color(color_top_bezel_shell) ttgo_top_bezel();
 }
 
 module assembly_exploded(separation_mm = 30) {
@@ -416,9 +439,11 @@ module assembly_exploded(separation_mm = 30) {
 // DEFAULT RENDER
 // ===========================================
 
-render_mode = "model"; // model, overlay, cutouts, positive, section_x, section_y
+render_mode = "model"; // model, color_key, overlay, cutouts, positive, section_x, section_y
 
-if (render_mode == "overlay") {
+if (render_mode == "color_key") {
+    color_key_preview();
+} else if (render_mode == "overlay") {
     validation_overlay();
 } else if (render_mode == "cutouts") {
     debug_cutouts();

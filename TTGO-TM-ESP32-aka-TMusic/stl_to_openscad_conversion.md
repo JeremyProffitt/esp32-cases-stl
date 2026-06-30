@@ -182,6 +182,7 @@ Other supported modes:
 | Mode | Meaning |
 |------|---------|
 | `"model"` | Default rebuilt parametric part |
+| `"color_key"` | Color-coded positive/support/cutout preview with colors named in the docs |
 | `"overlay"` | Rebuilt part over the normalized source STL |
 | `"cutouts"` | Positive shell plus visible negative volumes |
 | `"positive"` | Positive starting geometry only |

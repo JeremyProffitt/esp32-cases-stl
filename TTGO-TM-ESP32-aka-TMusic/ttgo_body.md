@@ -81,6 +81,22 @@ Origin: front-left-bottom corner of the normalized bezel bounding box.
 | skirt_relief_depth_mm | 1.400 | Front/back skirt notch depth |
 | skirt_relief_height_mm | 2.500 | Lower skirt notch height |
 
+## Color Key
+
+Set `render_mode = "color_key"` in `ttgo_body.scad` to show the shell and
+cutout volumes by color. Colors are preview aids only; exported STL files do
+not retain them.
+
+| Color | Section Name | Meaning |
+|-------|--------------|---------|
+| Gold | `top_bezel_positive_shell` | Starting positive bezel body |
+| Dodger blue | `top_bezel_inner_cavity_cutout` | Underside hollow cavity removed from the shell |
+| Lime green | `top_bezel_display_window_cutout` | Display window through-cut |
+| Magenta | `top_bezel_side_control_slot_cutouts` | Four side control / access slots |
+| Red | `top_bezel_corner_relief_hole_cutouts` | Four small corner relief holes |
+| Cyan | `top_bezel_skirt_alignment_relief_cutouts` | Lower skirt and side relief notches |
+| Orange | `validation_source_mesh` | Source STL overlay in validation mode |
+
 ## Component Diagram
 
 ### Top View (looking down, -Z)
@@ -161,6 +177,7 @@ Origin: front-left-bottom corner of the normalized bezel bounding box.
 | `debug_positive_only()` | Shows the starting positive shell |
 | `debug_negative_only()` | Shows all cutout volumes |
 | `debug_cutouts()` | Overlays positive shell and negative volumes |
+| `color_key_preview()` | Shows the named color key geometry |
 | `debug_section_x(x_mm)` | Thin X section |
 | `debug_section_y(y_mm)` | Thin Y section |
 | `validation_source_mesh()` | Imports and normalizes the source STL |

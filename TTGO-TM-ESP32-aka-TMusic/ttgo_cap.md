@@ -75,6 +75,22 @@ Origin: front-left-bottom corner of the normalized tray bounding box.
 | left_wall_relief_depth_mm | 7.200 | Y relief size |
 | left_wall_relief_height_mm | 8.500 | Z relief size |
 
+## Color Key
+
+Set `render_mode = "color_key"` in `ttgo_cap.scad` to show the shell, support
+lugs, and cutout volumes by color. The magenta support lugs are lifted upward
+only in this preview mode so they are not hidden inside the rim. Colors are
+preview aids only; exported STL files do not retain them.
+
+| Color | Section Name | Meaning |
+|-------|--------------|---------|
+| Gold | `base_tray_outer_block` | Starting positive tray body |
+| Dodger blue | `base_tray_inner_cavity_cutout` | Main electronics cavity removed from the tray |
+| Lime green | `base_tray_rim_rabbet_cutout` | Rim rabbet removed to form the bezel seat |
+| Magenta | `base_tray_support_lugs_positive` | Positive support / latch / PCB-location lugs |
+| Red | `base_tray_left_wall_connector_relief_cutouts` | Upper left-wall connector relief cutouts |
+| Orange | `validation_source_mesh` | Source STL overlay in validation mode |
+
 ## Component Diagram
 
 ### Top View (looking down, -Z, into the open tray)
@@ -152,6 +168,7 @@ Origin: front-left-bottom corner of the normalized tray bounding box.
 | `debug_positive_only()` | Shows the outer block plus lug positives |
 | `debug_negative_only()` | Shows all cutout volumes |
 | `debug_cutouts()` | Overlays positive and negative volumes |
+| `color_key_preview()` | Shows the named color key geometry |
 | `debug_section_x(x_mm)` | Thin X section |
 | `debug_section_y(y_mm)` | Thin Y section |
 | `validation_source_mesh()` | Imports and normalizes the source STL |

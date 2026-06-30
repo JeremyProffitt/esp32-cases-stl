@@ -18,13 +18,13 @@
  * COMPONENT INDEX
  * ===========================================
  *
- * | Component                     | Origin [X,Y,Z] | Size [W,D,H]        | Attaches To      |
- * |-------------------------------|----------------|---------------------|------------------|
- * | base_tray_outer_block         | [0,0,0]        | [76.2,49.523,22.15] | ground / print   |
- * | base_tray_inner_cavity        | [5.25,4.25,1.75]| [66.7,41.0,thru]   | negative cutout  |
- * | base_tray_rim_rabbet          | top perimeter  | 5.4 high            | bezel skirt      |
- * | support_lugs (x4)             | inner rim      | variable            | PCB / latch area |
- * | left_wall_connector_reliefs   | left wall      | variable            | negative cutout  |
+ * | Component                     | Preview Color | Origin [X,Y,Z] | Size [W,D,H]        | Attaches To      |
+ * |-------------------------------|---------------|----------------|---------------------|------------------|
+ * | base_tray_outer_block         | gold          | [0,0,0]        | [76.2,49.523,22.15] | ground / print   |
+ * | base_tray_inner_cavity        | dodgerblue    | [5.25,4.25,1.75]| [66.7,41.0,thru]   | negative cutout  |
+ * | base_tray_rim_rabbet          | limegreen     | top perimeter  | 5.4 high            | bezel skirt      |
+ * | support_lugs (x4)             | magenta       | inner rim      | variable            | PCB / latch area |
+ * | left_wall_connector_reliefs   | red           | left wall      | variable            | negative cutout  |
  */
 
 // ===========================================
@@ -88,6 +88,14 @@ left_wall_relief_height_mm = 8.500;
 left_wall_relief_z_mm = base_tray_height_mm - left_wall_relief_height_mm;
 left_wall_relief_depth_mm = 7.200;
 left_wall_relief_centers_y_mm = [18.200, 36.800];
+
+// --- Preview colors (used only by debug/color-key render modes) ---
+color_base_tray_outer_block = "gold";
+color_inner_cavity_cutout = "dodgerblue";
+color_rim_rabbet_cutout = "limegreen";
+color_support_lugs = "magenta";
+color_left_wall_connector_reliefs = "red";
+color_source_mesh_overlay = "orange";
 
 $fn = 64;
 
@@ -347,21 +355,36 @@ module debug_bounds() {
 }
 
 module debug_positive_only() {
-    color("lightgray") base_tray_outer_block();
-    color("darkgray") base_tray_support_lugs_positive();
+    color(color_base_tray_outer_block) base_tray_outer_block();
+    color(color_support_lugs) base_tray_support_lugs_positive();
 }
 
 module debug_negative_only() {
-    color("crimson", 0.35) {
-        base_tray_shell_negative_cutouts();
-        base_tray_final_negative_cutouts();
-    }
+    color(color_inner_cavity_cutout, 0.45) base_tray_inner_cavity_cutout();
+    color(color_rim_rabbet_cutout, 0.55) base_tray_rim_rabbet_cutout();
+    color(color_left_wall_connector_reliefs, 0.70) base_tray_left_wall_connector_relief_cutouts();
 }
 
 module debug_cutouts() {
-    color("lightgray", 0.25) base_tray_outer_block();
-    color("darkgray", 0.35) base_tray_support_lugs_positive();
+    color(color_base_tray_outer_block, 0.25) base_tray_outer_block();
     debug_negative_only();
+    color(color_support_lugs, 0.90) base_tray_support_lugs_positive();
+}
+
+/**
+ * Color Key Preview
+ *
+ * Shows the positive shell, support lugs, and each named cutout volume in a
+ * distinct color. The magenta support lugs are lifted upward as a visual
+ * callout because they sit inside the rim in the real model. This is for
+ * identification only; STL export ignores colors and this mode is not the
+ * printable model.
+ */
+module color_key_preview() {
+    color(color_base_tray_outer_block, 0.25) base_tray_outer_block();
+    debug_negative_only();
+    translate([0, 0, 4])
+        color(color_support_lugs, 0.95) base_tray_support_lugs_positive();
 }
 
 module debug_section_x(x_mm = case_width_mm / 2) {
@@ -391,11 +414,11 @@ module validation_source_mesh() {
 
 module validation_overlay() {
     color("gray", 0.55) ttgo_base_tray();
-    color("orange", 0.25) validation_source_mesh();
+    color(color_source_mesh_overlay, 0.25) validation_source_mesh();
 }
 
 module assembly_colored() {
-    color("gray") ttgo_base_tray();
+    color(color_base_tray_outer_block) ttgo_base_tray();
 }
 
 module assembly_exploded(separation_mm = 30) {
@@ -406,9 +429,11 @@ module assembly_exploded(separation_mm = 30) {
 // DEFAULT RENDER
 // ===========================================
 
-render_mode = "model"; // model, overlay, cutouts, positive, section_x, section_y
+render_mode = "model"; // model, color_key, overlay, cutouts, positive, section_x, section_y
 
-if (render_mode == "overlay") {
+if (render_mode == "color_key") {
+    color_key_preview();
+} else if (render_mode == "overlay") {
     validation_overlay();
 } else if (render_mode == "cutouts") {
     debug_cutouts();
