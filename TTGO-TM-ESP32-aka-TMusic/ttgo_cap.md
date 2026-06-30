@@ -77,10 +77,12 @@ Origin: front-left-bottom corner of the normalized tray bounding box.
 
 ## Color Key
 
-Set `render_mode = "color_key"` in `ttgo_cap.scad` to show the shell, support
-lugs, and cutout volumes by color. The magenta support lugs are lifted upward
-only in this preview mode so they are not hidden inside the rim. Colors are
-preview aids only; exported STL files do not retain them.
+Set `render_mode = "color_key"` in `ttgo_cap.scad` and use OpenSCAD Preview
+(`F5`) to show the shell, support lugs, and cutout volumes by color. The
+default `render_mode = "model"` is the printable boolean result; the cutouts
+are voids there, so they cannot remain separately colored. The magenta support
+lugs are lifted upward only in this preview mode so they are not hidden inside
+the rim. Colors are preview aids only; exported STL files do not retain them.
 
 | Color | Section Name | Meaning |
 |-------|--------------|---------|

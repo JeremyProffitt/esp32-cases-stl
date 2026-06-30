@@ -429,7 +429,11 @@ module assembly_exploded(separation_mm = 30) {
 // DEFAULT RENDER
 // ===========================================
 
-render_mode = "model"; // model, color_key, overlay, cutouts, positive, section_x, section_y
+// [View Mode]
+// Use "model" for printable STL export. Use "color_key" in OpenSCAD Preview
+// (F5) to identify named sections; cutouts are voids in the final model, so
+// they cannot stay colored in the printable boolean solid.
+render_mode = "model"; // [model, color_key, overlay, cutouts, positive, section_x, section_y]
 
 if (render_mode == "color_key") {
     color_key_preview();
