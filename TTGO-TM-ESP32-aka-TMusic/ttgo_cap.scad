@@ -430,22 +430,25 @@ module assembly_exploded(separation_mm = 30) {
 // ===========================================
 
 // [View Mode]
-// Use "model" for printable STL export. Use "color_key" in OpenSCAD Preview
-// (F5) to identify named sections; cutouts are voids in the final model, so
+// Set to 1 in OpenSCAD Preview (F5) to identify named sections by color.
+// Keep 0 for printable STL export. Cutouts are voids in the final model, so
 // they cannot stay colored in the printable boolean solid.
-render_mode = "model"; // [model, color_key, overlay, cutouts, positive, section_x, section_y]
+see_in_color = 1; // [0:No, 1:Yes]
 
-if (render_mode == "color_key") {
+// Advanced debug mode used when see_in_color is 0.
+debug_view_mode = "model"; // [model, overlay, cutouts, positive, section_x, section_y]
+
+if (see_in_color == 1) {
     color_key_preview();
-} else if (render_mode == "overlay") {
+} else if (debug_view_mode == "overlay") {
     validation_overlay();
-} else if (render_mode == "cutouts") {
+} else if (debug_view_mode == "cutouts") {
     debug_cutouts();
-} else if (render_mode == "positive") {
+} else if (debug_view_mode == "positive") {
     debug_positive_only();
-} else if (render_mode == "section_x") {
+} else if (debug_view_mode == "section_x") {
     debug_section_x();
-} else if (render_mode == "section_y") {
+} else if (debug_view_mode == "section_y") {
     debug_section_y();
 } else {
     ttgo_base_tray();

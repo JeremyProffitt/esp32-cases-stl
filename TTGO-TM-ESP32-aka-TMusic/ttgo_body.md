@@ -83,11 +83,12 @@ Origin: front-left-bottom corner of the normalized bezel bounding box.
 
 ## Color Key
 
-Set `render_mode = "color_key"` in `ttgo_body.scad` and use OpenSCAD Preview
-(`F5`) to show the shell and cutout volumes by color. The default
-`render_mode = "model"` is the printable boolean result; the cutouts are voids
-there, so they cannot remain separately colored. Colors are preview aids only;
-exported STL files do not retain them.
+`see_in_color` defaults to `1` in `ttgo_body.scad`, so OpenSCAD Preview (`F5`)
+shows the shell and cutout volumes by color when the file is opened manually.
+Set `see_in_color = 0` for the printable boolean result; the project build
+scripts force that value for generated STL/PNG artifacts. The cutouts are voids
+in the printable model, so they cannot remain separately colored. Colors are
+preview aids only; exported STL files do not retain them.
 
 | Color | Section Name | Meaning |
 |-------|--------------|---------|

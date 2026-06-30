@@ -21,15 +21,16 @@ set "IMGSIZE=800,600"
 REM Front: rotX=55, rotY=0, rotZ=45 ; Rear: rotZ=225 (see CLAUDE.md)
 set "CAM_FRONT=0,0,0,55,0,45,0"
 set "CAM_REAR=0,0,0,55,0,225,0"
+set "SCAD_MODEL_DEFINES=-D see_in_color=0"
 
 for /r "%ROOT%" %%S in (*.scad) do (
     echo %%S | findstr /i /c:"\\build\\" /c:"\\tools\\" >nul
     if errorlevel 1 (
         set "NAME=%%~nS"
         echo ^>^> !NAME!
-        "%OPENSCAD%" -o "%OUT%\!NAME!.stl" --export-format=binstl "%%S"
-        "%OPENSCAD%" -o "%OUT%\!NAME!_front.png" --camera=%CAM_FRONT% --viewall --autocenter --imgsize=%IMGSIZE% --colorscheme=Tomorrow "%%S"
-        "%OPENSCAD%" -o "%OUT%\!NAME!_rear.png" --camera=%CAM_REAR% --viewall --autocenter --imgsize=%IMGSIZE% --colorscheme=Tomorrow "%%S"
+        "%OPENSCAD%" %SCAD_MODEL_DEFINES% -o "%OUT%\!NAME!.stl" --export-format=binstl "%%S"
+        "%OPENSCAD%" %SCAD_MODEL_DEFINES% -o "%OUT%\!NAME!_front.png" --camera=%CAM_FRONT% --viewall --autocenter --imgsize=%IMGSIZE% --colorscheme=Tomorrow "%%S"
+        "%OPENSCAD%" %SCAD_MODEL_DEFINES% -o "%OUT%\!NAME!_rear.png" --camera=%CAM_REAR% --viewall --autocenter --imgsize=%IMGSIZE% --colorscheme=Tomorrow "%%S"
     )
 )
 

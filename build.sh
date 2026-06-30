@@ -25,16 +25,19 @@ IMGSIZE="800,600"
 # Front: rotX=55, rotY=0, rotZ=45 ; Rear: rotZ=225 (see CLAUDE.md)
 CAM_FRONT="0,0,0,55,0,45,0"
 CAM_REAR="0,0,0,55,0,225,0"
+SCAD_MODEL_DEFINES=(-D "see_in_color=0")
 
 # Find every design .scad (skip the build dir and the tools/ helper wrappers).
 find "$ROOT" -name '*.scad' -not -path "$OUT/*" -not -path "$ROOT/tools/*" | while read -r scad; do
     name="$(basename "$scad" .scad)"
     echo ">> $name"
-    "$OPENSCAD" -o "$OUT/$name.stl" --export-format=binstl "$scad"
+    "$OPENSCAD" "${SCAD_MODEL_DEFINES[@]}" -o "$OUT/$name.stl" --export-format=binstl "$scad"
     "$OPENSCAD" -o "$OUT/${name}_front.png" \
+        "${SCAD_MODEL_DEFINES[@]}" \
         --camera="$CAM_FRONT" --viewall --autocenter \
         --imgsize="$IMGSIZE" --colorscheme=Tomorrow "$scad"
     "$OPENSCAD" -o "$OUT/${name}_rear.png" \
+        "${SCAD_MODEL_DEFINES[@]}" \
         --camera="$CAM_REAR" --viewall --autocenter \
         --imgsize="$IMGSIZE" --colorscheme=Tomorrow "$scad"
 done

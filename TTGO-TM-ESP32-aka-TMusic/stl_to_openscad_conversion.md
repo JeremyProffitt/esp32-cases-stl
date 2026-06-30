@@ -171,18 +171,25 @@ Open either file in OpenSCAD:
 - `ttgo_body.scad`
 - `ttgo_cap.scad`
 
-At the bottom of each SCAD file, set:
+At the bottom of each SCAD file, use:
 
 ```openscad
-render_mode = "model";
+see_in_color = 1; // colored manual preview
 ```
 
-Other supported modes:
+Primary display toggle:
+
+| Variable | Meaning |
+|----------|---------|
+| `see_in_color = 0` | Printable model view and STL export; forced by `build.sh` and `build.bat` |
+| `see_in_color = 1` | Default manual view; color-coded positive/support/cutout preview for OpenSCAD Preview/F5 |
+
+Advanced debug modes are available through `debug_view_mode` when
+`see_in_color = 0`:
 
 | Mode | Meaning |
 |------|---------|
 | `"model"` | Default rebuilt parametric part for printable STL export |
-| `"color_key"` | Color-coded positive/support/cutout preview; use OpenSCAD Preview/F5 because cutouts are voids in the final boolean model |
 | `"overlay"` | Rebuilt part over the normalized source STL |
 | `"cutouts"` | Positive shell plus visible negative volumes |
 | `"positive"` | Positive starting geometry only |
