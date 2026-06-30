@@ -1,125 +1,193 @@
-# TTGO-TM ESP32 ("TMusic") — Front Bezel (Parametric)
+# TTGO-TM ESP32 ("TMusic") - Top / Front Bezel
 
 ## Overview
 
-Editable, parametric **approximation** of the front bezel of the TTGO-TM
-ESP32 "TMusic" enclosure, hand-modelled from OpenSCAD primitives in
-[`ttgo_body.scad`](ttgo_body.scad).
+`ttgo_body.scad` is an editable, constructive OpenSCAD rebuild of
+`ttgo-body-2.stl`. It is not a triangle-exact copy. The source STL remains the
+fit-check reference; this model turns the measured STL envelope and visible
+openings into named positive and negative primitives.
 
-This is **not geometry-exact** — the source part is a dense organic CATIA mesh
-(~54k triangles). For an exact reproduction, use the import wrapper
-[`ttgo_body_mesh.scad`](ttgo_body_mesh.scad) / [`ttgo_body_mesh.md`](ttgo_body_mesh.md),
-which loads the original STL verbatim.
+The model starts with a positive rounded bounding shell and removes named
+negative cutouts for the underside cavity, display window, four side control
+slots, four small corner relief holes, and skirt alignment reliefs.
 
-The bezel is a rounded-rectangle frame with a top face plate carrying a large
-rectangular **display window**, a row of five **finger / speaker slots** plus a
-round **button hole** on the right short edge, and two **side ports** cut into
-the front long wall. The outer walls below the face form a skirt that seats
-into the cap's rim.
+## Source Mesh
+
+| Property | Value |
+|----------|-------|
+| File | `ttgo-body-2.stl` |
+| Faces | 51,684 |
+| Native min [X,Y,Z] mm | [-36.675, -44.4235, -3.540] |
+| Native max [X,Y,Z] mm | [39.525, 5.1000, 11.460] |
+| Normalized size [W,D,H] mm | [76.200, 49.5235, 15.000] |
+
+The SCAD file uses normalized corner-origin coordinates. The validation overlay
+imports the mesh and translates it by `-source_body_bbox_min_mm`.
+
+## Coordinate System
+
+```text
+X = Width  (positive = right)
+Y = Depth  (positive = back/away from viewer)
+Z = Height (positive = up)
+
+Origin: front-left-bottom corner of the normalized bezel bounding box.
+```
 
 ## Dimensions
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
+| **Source** | | |
+| source_body_face_count | 51684 | STL face count from `trimesh` and OpenSCAD import checks |
+| source_body_bbox_size_mm | [76.200, 49.5235, 15.000] | Mesh bounding-box size |
 | **Global / Shared** | | |
-| case_width_mm | 76.2 | Outer width (X) |
-| case_depth_mm | 49.5 | Outer depth (Y) |
-| corner_radius_mm | 3 | Outer vertical corner radius |
-| wall_thickness_mm | 2.5 | Common wall thickness |
-| **bezel_shell** | | |
-| bezel_height_mm | 15 | Total height (Z) |
-| bezel_face_mm | 3 | Top face-plate thickness |
-| bezel_skirt_mm | 12 | Outer skirt height below face (mates cap) |
-| **display_window** | | |
-| display_window_width_mm | 44 | Window X size |
-| display_window_depth_mm | 41.5 | Window Y size |
-| display_window_x_mm | 4 | Window origin X |
-| display_window_y_mm | 4 | Window origin Y |
-| **finger_slots** | | |
-| finger_slot_count | 5 | Number of slots |
-| finger_slot_width_mm | 2.4 | Slot X width |
-| finger_slot_length_mm | 9 | Slot Y length |
-| finger_slot_pitch_mm | 4.6 | Centre-to-centre spacing |
-| finger_slot_x0_mm | 55 | X centre of first slot |
-| finger_slot_y_mm | 30 | Y centre of the slot row |
-| **button_hole** | | |
-| button_hole_diameter_mm | 5 | Button opening diameter |
-| button_hole_x_mm | 67 | X centre |
-| button_hole_y_mm | 14 | Y centre |
-| **side_ports** | | |
-| side_port_width_mm | 11 | Port X length |
-| side_port_height_mm | 6 | Port Z height |
-| side_port_z_mm | 2 | Port bottom Z |
-| side_port_x1_mm / x2_mm | 14 / 34 | Port X centres |
+| case_width_mm | 76.200 | Overall X envelope |
+| case_depth_mm | 49.523 | Overall Y envelope |
+| case_corner_radius_mm | 2.300 | Clean outer corner radius |
+| case_inner_corner_radius_mm | 1.300 | Inner cavity corner radius |
+| case_wall_thickness_mm | 2.500 | Nominal wall thickness target |
+| case_fit_clearance_xy_mm | 0.250 | Named fit allowance for mating interfaces |
+| case_epsilon_mm | 0.050 | Boolean anti-coincident-face offset |
+| **top_bezel_positive_shell** | | |
+| top_bezel_height_mm | 15.000 | Overall Z height |
+| top_bezel_face_thickness_mm | 3.000 | Top face plate thickness |
+| top_bezel_skirt_height_mm | 12.000 | Lower skirt height |
+| **top_bezel_inner_cavity_cutout** | | |
+| top_bezel_inner_cavity_x_mm | 2.900 | Cavity X origin |
+| top_bezel_inner_cavity_y_mm | 2.400 | Cavity Y origin |
+| top_bezel_inner_cavity_width_mm | 70.400 | Cavity X size |
+| top_bezel_inner_cavity_depth_mm | 44.700 | Cavity Y size |
+| **top_bezel_display_window_cutout** | | |
+| display_window_x_mm | 15.200 | Window X origin |
+| display_window_y_mm | 5.600 | Window Y origin |
+| display_window_width_mm | 51.500 | Window X size |
+| display_window_depth_mm | 38.400 | Window Y size |
+| display_window_corner_radius_mm | 0.800 | Clean corner radius |
+| **top_bezel_side_control_slot_cutouts** | | |
+| side_control_slot_count | 4 | Number of rounded side slots observed in top slices |
+| side_control_slot_x_mm | 2.750 | Slot X origin |
+| side_control_slot_first_y_mm | 12.100 | First slot Y origin |
+| side_control_slot_pitch_mm | 7.600 | Y pitch |
+| side_control_slot_width_mm | 8.700 | Slot X size |
+| side_control_slot_depth_mm | 5.900 | Slot Y size |
+| side_control_slot_radius_mm | 2.700 | Slot end radius |
+| **top_bezel_corner_relief_hole_cutouts** | | |
+| corner_relief_hole_diameter_mm | 1.900 | Small relief hole diameter |
+| corner_relief_hole_left_x_mm / right_x_mm | 6.200 / 70.850 | Hole X centers |
+| corner_relief_hole_front_y_mm / back_y_mm | 5.300 / 44.350 | Hole Y centers |
+| **top_bezel_skirt_alignment_relief_cutouts** | | |
+| skirt_relief_width_mm | 8.000 | Front/back skirt notch width |
+| skirt_relief_depth_mm | 1.400 | Front/back skirt notch depth |
+| skirt_relief_height_mm | 2.500 | Lower skirt notch height |
 
 ## Component Diagram
 
 ### Top View (looking down, -Z)
 
-```
+```text
         +Y (back)
            ^
-    +------+---------------------------+
-    |                                  |
-    |   +---------------+    ||||| <-- finger slots
-    |   |   display     |    o    <--- button hole
-    |   |   window      |              |
-    |   +---------------+              |
-    +---[port]---[port]----------------+ --> +X (right)
+    +--o---------------------------o--+
+    | [slot]  +-------------------+   |
+    | [slot]  |                   |   |
+    | [slot]  |   display window  |   |
+    | [slot]  |                   |   |
+    |         +-------------------+   |
+    +--o---------------------------o--+ --> +X
    /
-  Origin [0,0]   (ports cut into front long wall, y=0)
+  Origin [0,0]
 ```
 
 ### Side View (looking from right, -X)
 
-```
-        +Z (up)
-           ^
-    +------+------------------+   <- top face plate (window/slots cut here)
-    |                         |
-    |      (hollow skirt)     |   <- outer walls seat into cap rim
-    +------+------------------+ --> +Y (back)
+```text
+        +Z
+         ^
+    +----+------------------+  top face with window/slots/holes
+    |                       |
+    |       hollow skirt    |
+    |                       |
+    +---[small reliefs]-----+ --> +Y
    z=0
 ```
 
 ## Components
 
-### bezel_shell
-- **Purpose**: Front frame / face of the enclosure
-- **Position**: Origin [0, 0, 0]
-- **Bounding Box**: [0,0,0] to [76.2, 49.5, 15]
-- Solid rounded outer shell, hollowed from below leaving a 3 mm face plate;
-  the surrounding outer walls form the mating skirt.
+### top_bezel_positive_shell
 
-### display_window
-- **Purpose**: Opening for the LCD / TFT display
-- Rectangular (rounded corners) through-cut in the face plate.
+- Purpose: Main printable mass of the top/front bezel.
+- Position: Origin `[0,0,0]`.
+- Bounding box: `[0,0,0]` to `[76.2,49.523,15]`.
+- Construction: Rounded rectangular prism.
 
-### finger_slots (×5)
-- **Purpose**: Speaker / vent slots
-- Rounded-end vertical slots through the face on the right panel.
+### top_bezel_inner_cavity_cutout
 
-### button_hole
-- **Purpose**: Push-button opening
-- Round through-hole on the right panel.
+- Purpose: Opens the underside while preserving a 3 mm top face.
+- Position: `[2.9,2.4,-0.05]`.
+- Bounding box: approximately `[2.9,2.4,-0.05]` to `[73.3,47.1,12.05]`.
 
-### side_ports (×2)
-- **Purpose**: USB / SD / power edge access
-- Rectangular cut-outs through the front long wall.
+### top_bezel_display_window_cutout
+
+- Purpose: Main display aperture.
+- Position: `[15.2,5.6,11.95]`.
+- Bounding box: approximately `[15.2,5.6,11.95]` to `[66.7,44.0,15.55]`.
+
+### top_bezel_side_control_slot_cutouts
+
+- Purpose: Four rounded rectangular side openings visible in upper mesh
+  cross-sections.
+- Position: left-side top face region.
+- Approximate slot size: `[8.7,5.9,thru]`.
+
+### top_bezel_corner_relief_hole_cutouts
+
+- Purpose: Four small holes near the top-face corners. They are named
+  generically because the STL does not reveal whether they are screw,
+  locating, or manufacturing relief features.
+- Diameter: `1.9 mm`.
+
+### top_bezel_skirt_alignment_relief_cutouts
+
+- Purpose: Small notches in the lower skirt and left slot wall region.
+- Position: lower skirt edges and left-side slot edge.
+
+## Debug And Validation Modules
+
+| Module | Purpose |
+|--------|---------|
+| `debug_axes(length_mm)` | Shows RGB XYZ axes |
+| `debug_bounds()` | Shows normalized bounding box |
+| `debug_positive_only()` | Shows the starting positive shell |
+| `debug_negative_only()` | Shows all cutout volumes |
+| `debug_cutouts()` | Overlays positive shell and negative volumes |
+| `debug_section_x(x_mm)` | Thin X section |
+| `debug_section_y(y_mm)` | Thin Y section |
+| `validation_source_mesh()` | Imports and normalizes the source STL |
+| `validation_overlay()` | Overlays rebuild and source mesh |
+| `assembly_colored()` | Colored part view |
+| `assembly_exploded(separation_mm)` | Exploded-position helper |
 
 ## Assembly Notes
 
-- Mates with [`ttgo_cap.scad`](ttgo_cap.md) — the bezel skirt drops into the
-  cap's rim rabbet.
-- Print orientation: face plate down (window side on the bed) for the cleanest
-  visible surface, or skirt down with supports for the ports.
-- Recommended infill: 20%. Material: PLA or PETG.
-- **Approximation caveat**: slot/port/window placements are estimated from
-  mesh cross-sections; verify against the real device or the mesh wrapper
-  before committing to a print.
+- Mates with `ttgo_cap.scad` / `ttgo_base_tray()`.
+- The original mesh and rebuild should be compared with `validation_overlay()`
+  before printing.
+- Print orientation depends on whether face quality or support avoidance matters
+  more. Face-down gives a cleaner visible face; skirt-down reduces top-face bed
+  contact marks but may need support for openings.
+- Recommended material: PLA or PETG.
+
+## Known Approximations
+
+- Organic CATIA fillets were simplified to clean rounded rectangles.
+- The four side slots are modeled from slice measurements rather than recovered
+  CAD history.
+- The lower skirt reliefs are functional approximations of repeated mesh edge
+  breaks.
 
 ## Changelog
 
 | Date | Change |
 |------|--------|
-| 2026-06-22 | Initial parametric rebuild from ttgo-body-2.stl |
+| 2026-06-30 | Rebuilt as explicit positive shell plus named negative cutouts; corrected slot count to four; added validation modules |
